@@ -1,0 +1,23 @@
+sudo: required
+services:  
+  - docker
+
+before_install:
+  - docker build -t dockerReact -f .Dockerfile.dev .
+
+script:
+  - docker run -e CI=true dockerReact npm run test
+
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $ACCESS_KEY_ID
+  secret_access_key:
+    secure: "$SECRET_ACCESS_KEY"
+  region: "ap-south-1"
+  app: "docker_react"
+  env: "Dockerreact-env"
+  bucket_name: "elasticbeanstalk-ap-south-1-517240605450"
+  bucket_path: "docker_react"
+  on:
+    branch: master
